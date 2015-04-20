@@ -10,6 +10,8 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	jsonminify = require('gulp-jsonminify'),
 	minifyHTML = require('gulp-minify-html'),
+	imagemin = require('gulp-imagemin'),
+	pngcrush = require('imagemin-pngcrush'),
 	autoprefixer = require('gulp-autoprefixer');
 
 var env,
@@ -87,13 +89,25 @@ gulp.task('json', function(){
 		.pipe(connect.reload());
 });
 
+gulp.task('images', function(){
+	gulp.src('builds/development/images/**/*.*')
+	.pipe(gulpif(env==='production', imagemin({
+		progressive: true,
+		svgoPlugins: [{removeViewBox: false}],
+		use: [pngcrush()]
+	})))
+	.pipe(gulpif(env==='production', gulp.dest(outputDir+'images')))
+	.pipe(connect.reload());	
+})
+
 gulp.task('watch', function(){
 	gulp.watch(coffeeSources, ['coffee']);
 	gulp.watch(jsSources, ['js']);
 	gulp.watch('components/sass/*.scss', ['compass']);
 	gulp.watch(htmlSources, ['html']);
 	gulp.wtach('builds/development/*.html', ['html'])
-	gulp.watch('builds/development/js/*.json', ['json']);
+	gulp.watch('builds/development/js/*.json', ['json'])
+	gulp.watch('builds/development/images/**/*.*', ['images']);
 });
 
 gulp.task('connect', function(){
@@ -103,7 +117,7 @@ gulp.task('connect', function(){
 	});	
 });
 
-gulp.task('default', ['html', 'json', 'coffee', 'js', 'compass', 'connect', 'watch']);
+gulp.task('default', ['html', 'json', 'coffee', 'js', 'compass', 'images', 'connect', 'watch']);
 
 
 //consider tasks below to eventually cut out compass
