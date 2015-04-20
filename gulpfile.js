@@ -6,6 +6,7 @@ var gulp = require('gulp'),
 	compass = require('gulp-compass'),
 	sass = require('gulp-sass'),
 	connect = require('gulp-connect'),
+	//gulp = require('gulp-if'),
 	autoprefixer = require('gulp-autoprefixer');
 
 
@@ -37,7 +38,7 @@ jsSources = [
 	'components/scripts/template.js'
 ];
 sassSources = ['components/sass/style.scss'];
-cssSources = [outputDir + ' css/style.css'];
+cssSources = [outputDir + 'css/style.css'];
 htmlSources = [outputDir + '*.html'];
 jsonSources = [outputDir + 'js/*.json'];
 
